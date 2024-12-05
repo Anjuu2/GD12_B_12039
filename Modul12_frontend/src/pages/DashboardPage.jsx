@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react"; 
-import { Alert, Col, Container, Row, Spinner, Stack } from "react-bootstrap"; 
+import { Alert, Col, Container, Row, Spinner, Stack, Button } from "react-bootstrap"; 
 import { GetAllContents } from "../api/apiContent"; 
-import { getThumbnail } from "../api"; 
- 
+import { getThumbnail } from "../api";
+import { addToWatchLater, getWatchLaterVideos } from "../api/apiWatch_later";
+import { toast } from "react-toastify";
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 const DashboardPage = () => { 
     const [contents, setContents] = useState([]); 
     const [isLoading, setIsLoading] = useState(false); 
-    
+    const [watchLaterVideos, setWatchLaterVideos] = useState([]);
+
     useEffect(() => { 
         setIsLoading(true);
         GetAllContents() 
@@ -17,7 +21,51 @@ const DashboardPage = () => {
             .catch((err) => { 
                 console.log(err); 
             });
+
+        getWatchLaterVideos()
+            .then((data) => {
+                setWatchLaterVideos(data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }, []);
+
+    const handleAddToWatchLater = async (contentId) => {
+        const isAlreadyInWatchLater = watchLaterVideos.some(video => video.id === contentId);
+
+        if (isAlreadyInWatchLater) {
+            toast.info("Video sudah ada di Watch Later!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+            });
+            return;
+        }
+
+        try {
+            await addToWatchLater(contentId);
+            toast.success("Video berhasil ditambahkan ke Watch Later!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+            });
+
+            getWatchLaterVideos()
+                .then((data) => {
+                    setWatchLaterVideos(data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            toast.error("Gagal menambahkan video ke Watch Later!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+            });
+        }
+    };
 
     return ( 
         <Container className="mt-4"> 
@@ -50,11 +98,18 @@ const DashboardPage = () => {
                                 className="card-img w-100 h-100 object-fit-cover bg-light" 
                                 alt="..." 
                                 /> 
-                                <div className="card-body"> 
+                                <div className="card-body position-relative"> 
                                     <h5 className="card-title text-truncate"> 
                                         {content.title} 
-                                    </h5> 
-                                <p className="card-text">{content.description}</p> 
+                                    </h5>
+                                    <p className="card-text">{content.description}</p>
+                                    <Button
+                                        variant="success"
+                                        className="btn-sm position-absolute bottom-0 end-0 m-3"
+                                        onClick={() => handleAddToWatchLater(content.id)} // Menambahkan event handler
+                                    >
+                                        <i className="bi bi-stopwatch-fill"></i>
+                                    </Button>
                                 </div> 
                             </div> 
                         </Col> 

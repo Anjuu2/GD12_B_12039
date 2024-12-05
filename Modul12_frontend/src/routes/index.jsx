@@ -8,6 +8,7 @@ import RegisterPage from "../pages/auth/RegisterPage";
 import DashboardPage from "../pages/DashboardPage"; 
 import ContentPage from "../pages/ContentPage"; 
 import ProtectedRoutes from "./ProtectedRoutes";
+import Watch_laterPage from "../pages/Watch_latePage";
 
 const router = createBrowserRouter([ 
     { 
@@ -41,7 +42,12 @@ const router = createBrowserRouter([
         { 
             path: "/user/content", 
             element: <ContentPage />, 
-        }, 
+        },
+        {
+            path: "/user/watch-later",
+            element: <Watch_laterPage />
+            
+        }
     ], 
     }, 
 ]); 

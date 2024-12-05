@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Watch_laterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\Api\Watch_laterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +31,8 @@ Route::middleware('auth:api')->group(function(){
     Route::delete('/contents/{id}',[App\Http\Controllers\Api\ContentController::class,'destroy']);
 
     Route::get('/contents/user/{id}',[App\Http\Controllers\Api\ContentController::class,'showContentbyUser']);
+    
+    Route::get('/watch-later', [Watch_laterController::class, 'index']);
+    Route::post('/watch-later', [Watch_laterController::class, 'store']);
+    Route::delete('/watch-later/{id}', [Watch_laterController::class, 'destroy']);
 });

@@ -1,9 +1,7 @@
 import { Outlet } from "react-router-dom"; 
- 
-// import component 
-import TopNavbar from "../components/TopNavbar"; 
- 
-//mengatur route yang akan ditampilkan di navbar 
+
+import TopNavbar from "../components/TopNavbar";  
+
 const routes = [ 
     { 
         path: "/user", 
@@ -12,7 +10,11 @@ const routes = [
     { 
         path: "/user/content", 
         name: "My Videos", 
-    } 
+    },
+    {
+        path: "/user/watch-later",
+        name: "Watch Later",
+    }
 ]; 
     
 const UserLayout = ({ children }) => { 
